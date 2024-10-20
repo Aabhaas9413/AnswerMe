@@ -1,0 +1,30 @@
+[
+  {
+    "_recordId": "recA78HfyVk6p1U3d",
+    "Company Name": "Test Company Limited",
+    "Question": "Do you encrypt data in transit?",
+    "Answer": "Yes, all data in transit is encrypted.",
+    "_companyId": "63297b55665e8a001366a547",
+    "Created At": "2024-02-08T15:39:00", 
+    "Updated At": "2024-08-02T15:39:00",   
+    "Updated By": "founders+ex@privasee.io",
+    "Created By": "founders+alex@privasee.io",
+    "Assigned To": null,
+    "Properties": "section:Business Continuity Planning (BCP) & Disaster Recovery",
+    "Question Description": "If \"Yes,\" please provide the encryption types and additional details. If \"No\" or \"Not Applicable,\" please provide an explanation."
+  },
+  {
+    "_recordId": "rectXJiVJRswYJ1cj",
+    "Company Name": "Test Company Limited",
+    "Question": "How often do you test backups?",
+    "Answer": "Monthly",
+    "_companyId": "63297b55665e8a001366a547",
+    "Created At": "2024-02-08T15:39:00",  
+    "Updated At": "2024-08-02T15:39:00",   
+    "Updated By": "founders+alex@privasee.io",
+    "Created By": "founders+alex@privasee.io",
+    "Assigned To": null,
+    "Properties": "section:Business Continuity Planning (BCP) & Disaster Recovery",
+    "Question Description": "If \"Other\" or \"Not Applicable,\" please provide an explanation."
+  }
+]
