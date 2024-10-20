@@ -3,7 +3,7 @@ import { QuestionService } from '../services/question.service';
 import { Question } from '../models/questions.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AnswerModalComponent } from "../answer-modal/answer-modal/answer-modal.component";
+import { AnswerModalComponent } from "../answer-modal/answer-modal.component";
 import { QuestionModalComponent } from '../question-modal/question-modal/question-modal.component';
 declare const $: any;
 
@@ -18,27 +18,41 @@ export class DashboardComponent implements OnInit {
   questions: Question[] = [];
   selectedQuestion: Question = {} as Question;
   isEditMode: boolean = false;
+  searchTerm: string = ''; // To bind the search input
+
   constructor(private questionService: QuestionService) { }
   
 
   ngOnInit(): void {
-    this.questionService.getQuestions().subscribe(
-      (data: Question[]) => {
+   this.getQuestions()
+}
+
+getQuestions(){
+  this.questionService.getQuestions().subscribe(
+    (data: Question[]) => {
         this.questions = data.map(q => ({
-          ...q,
-          createdAt: new Date(q.createdAt), // Convert to Date object
-          updatedAt: new Date(q.updatedAt)  // Convert to Date object
+            ...q,
+            createdAt: new Date(q.createdAt),
+            updatedAt: new Date(q.updatedAt)
         }));
-        console.log(this.questions);
-      },
-      (error) => {
+    },
+    (error) => {
         console.error('Error loading questions:', error.message);
-      }
-    );
+    }
+); 
+}
+
+filterQuestions() {
+  const term = this.searchTerm.toLowerCase();
+  if (term) {
+      this.questions = this.questions.filter(q => 
+          q.question.toLowerCase().includes(term) || 
+          (q.answer && q.answer.toLowerCase().includes(term))
+      );
+  } else {
+      this.getQuestions()
   }
-
-
-
+}
   openModal(question: Question) {
     this.selectedQuestion = { ...question }; // Clone the question to prevent direct modification
     $('#editAnswerModal').modal('show'); // Open the modal

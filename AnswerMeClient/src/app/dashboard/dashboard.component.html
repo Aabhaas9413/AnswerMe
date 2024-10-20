@@ -11,7 +11,7 @@
         <h2 class="dashboard-title">CAIQ - Manage</h2>
         <div class="search-filters d-flex align-items-center">
             <div class="input-group search-bar">
-                <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
+                <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="filterQuestions()" aria-label="Search">
                 
             </div>
             <button class="btn btn-primary filter-button">Owners (2)</button>
