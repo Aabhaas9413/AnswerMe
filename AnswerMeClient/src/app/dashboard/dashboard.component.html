@@ -12,7 +12,6 @@
         <div class="search-filters d-flex align-items-center">
             <div class="input-group search-bar">
                 <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="filterQuestions()" aria-label="Search">
-                
             </div>
             <button class="btn btn-primary filter-button">Owners (2)</button>
             <button class="btn btn-success filter-button">Status (4)</button>
@@ -32,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            <ng-container *ngFor="let question of questions; let i = index">
+            <ng-container *ngFor="let question of questions | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index">
                 <tr class="main-row">
                     <td>{{ question.question }}</td>
                     <td>                       
@@ -53,12 +52,11 @@
             </ng-container>
         </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <pagination-controls class="float-paginate" (pageChange)="currentPage = $event"></pagination-controls>
 </div>
-
-
-
 
 <app-question-modal [selectedQuestion]="selectedQuestion" [questions]="questions" [isEditMode]="isEditMode"></app-question-modal>
 
-<app-answer-modal [selectedQuestion]="selectedQuestion" [questions]="questions" ></app-answer-modal>
-
+<app-answer-modal [selectedQuestion]="selectedQuestion" [questions]="questions"></app-answer-modal>

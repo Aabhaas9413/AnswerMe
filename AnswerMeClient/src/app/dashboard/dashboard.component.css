@@ -183,3 +183,7 @@ textarea.form-control, input.form-control {
     background-color: #007bff;
     color: white;
 }
+
+.float-paginate{
+    float: right;
+}

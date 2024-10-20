@@ -1,0 +1,52 @@
+### GET all questions
+GET http://localhost:3000/api/questions
+Content-Type: application/json
+
+### POST a new question
+curl -X POST "http://localhost:3000/api/questions" \
+-H "Content-Type: application/json" \
+-d '{
+    "fields": {
+        "companyName": "Test Company Limited",
+        "_companyId": 12345,
+        "question": "What is your primary business?",
+        "answer": "Software Development",
+        "createdAt": "2024-10-20",
+        "createdBy": "admin@example.com",
+        "updatedAt": "2024-10-20",
+        "updatedBy": "admin@example.com",
+        "assignedTo": "manager@example.com",
+        "properties": { "section": "General Information" },
+        "questionDescription": "Describe the main activities of your organization."
+    }
+}'
+
+
+### PUT (Update) an existing question
+PUT http://localhost:3000/api/questions/recoOpUleZ21rwVnA
+Content-Type: application/json
+
+{
+    "fields": {
+        "Question": "What is your primary business?",
+        "Answer": "AI and Software Development",
+        "Updated At": "2024-10-20",
+        "Updated By": "manager@example.com"
+    }
+}
+
+
+
+### PATCH (Partial update) a question
+PATCH http://localhost:3000/api/questions/recoOpUleZ21rwVnA
+Content-Type: application/json
+
+{
+    "fields": {
+        "Answer": "Artificial Intelligence Solutions"
+    }
+}
+
+
+### DELETE a question
+DELETE http://localhost:3000/api/questions/recoOpUleZ21rwVnA

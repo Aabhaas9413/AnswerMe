@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnswerModalComponent } from "../answer-modal/answer-modal.component";
 import { QuestionModalComponent } from '../question-modal/question-modal/question-modal.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 declare const $: any;
 
 @Component({
@@ -12,14 +13,14 @@ declare const $: any;
   standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  imports: [CommonModule, FormsModule, AnswerModalComponent, QuestionModalComponent]
+  imports: [CommonModule, FormsModule, AnswerModalComponent, QuestionModalComponent, NgxPaginationModule]
 })
 export class DashboardComponent implements OnInit {
   questions: Question[] = [];
   selectedQuestion: Question = {} as Question;
   isEditMode: boolean = false;
   searchTerm: string = ''; // To bind the search input
-
+  currentPage: number = 1; 
   constructor(private questionService: QuestionService) { }
   
 
@@ -50,7 +51,7 @@ filterQuestions() {
           (q.answer && q.answer.toLowerCase().includes(term))
       );
   } else {
-      this.getQuestions()
+      this.getQuestions(); // Reset to original list
   }
 }
   openModal(question: Question) {
@@ -85,10 +86,13 @@ filterQuestions() {
   }
 
   deleteQuestion(index: number) {
+    const questionId = this.questions[index]._recordId;
     if (confirm('Are you sure you want to delete this question?')) {
-      this.questions.splice(index, 1);
+        this.questionService.deleteQuestion(questionId.toString()).subscribe(() => {
+            this.questions.splice(index, 1);
+        });
     }
-  }
+}
 
   generateId(): number {
     return Math.floor(Math.random() * 100000);
