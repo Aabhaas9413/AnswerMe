@@ -1,0 +1,8 @@
+.modal-content {
+    border-radius: 10px;
+}
+
+textarea.form-control {
+    border-radius: 5px;
+    resize: none;
+}
