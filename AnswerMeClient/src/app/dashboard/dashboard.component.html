@@ -38,7 +38,7 @@
                         {{ question.assignedTo || 'Not Assigned' }}
                     </td>
                     <td>
-                        <span class="badge" [ngClass]="question.answer ? 'badge-success' : 'badge-warning'">
+                        <span class="badge" (keyup)="removeWhiteSpace('answer')" [ngClass]="question.answer ? 'badge-success' : 'badge-warning'">
                             {{ question.answer ? 'Complete' : 'Pending' }}
                         </span>
                     </td>

@@ -25,29 +25,82 @@ export class QuestionService {
 
   // POST a new question
   addQuestion(question: Question): Observable<Question> {
+    // Convert Date objects to strings in MM/DD/YYYY format before sending
     const payload = {
-      fields: { ...question }
+        fields: {
+            "companyName": question.companyName ?? '',
+            "_companyId": question._companyId ?? '',
+            "question": question.question ?? '',
+            "answer": question.answer ?? '',
+            "createdAt": this.formatDate(question.createdAt) ?? '',
+            "createdBy": question.createdBy ?? '',
+            "updatedAt": this.formatDate(question.updatedAt) ?? '',
+            "updatedBy": question.updatedBy ?? '',
+            "assignedTo": question.assignedTo ?? '',
+            "properties": question.properties ? JSON.stringify(question.properties) : '{}',
+            "questionDescription": question.questionDescription ?? ''
+        }
     };
-    return this.http.post<Question>(this.apiUrl, payload).pipe(
-      catchError((error) => {
-        console.error('Error adding question:', error);
-        throw new Error('Failed to add question');
-      })
-    );
-  }
 
-  // PUT (update) an existing question by _recordId
-  updateQuestion(_recordId: string, question: Partial<Question>): Observable<Question> {
-    const payload = {
-      fields: { ...question }
+    // Remove fields with empty strings or undefined values
+    const cleanedPayload = {
+        fields: Object.fromEntries(
+            Object.entries(payload.fields).filter(([key, value]) => value !== '' && value !== undefined)
+        )
     };
-    return this.http.put<Question>(`${this.apiUrl}/${_recordId}`, payload).pipe(
-      catchError((error) => {
-        console.error('Error updating question:', error);
-        throw new Error('Failed to update question');
-      })
+
+    return this.http.post<Question>(this.apiUrl, cleanedPayload).pipe(
+        catchError((error) => {
+            console.error('Error adding question:', error);
+            throw new Error('Failed to add question');
+        })
     );
-  }
+}
+
+// Utility function to convert Date objects to MM/DD/YYYY format
+private formatDate(date: Date): string {
+    if (!date) return '';
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+}
+
+
+updateQuestion(_recordId: string, question: Partial<Question>): Observable<Question> {
+  // Convert the `question` object to match the Airtable format with correct camelCase keys
+  const payload = {
+    fields: {
+      companyName: question.companyName ?? '',
+      _companyId: question._companyId ?? '',
+      question: question.question ?? '',
+      answer: question.answer ?? '',
+      createdAt: question.createdAt ? this.formatDate(new Date(question.createdAt)) : '',
+      createdBy: question.createdBy ?? '',
+      updatedAt: question.updatedAt ? this.formatDate(new Date(question.updatedAt)) : '',
+      updatedBy: question.updatedBy ?? '',
+      assignedTo: question.assignedTo ?? '',
+      properties: question.properties ? question.properties : {}, // Keep properties as an object
+      questionDescription: question.questionDescription ?? ''
+    }
+  };
+
+  // Clean the payload to remove any empty or undefined fields
+  const cleanedPayload = {
+    fields: Object.fromEntries(
+      Object.entries(payload.fields).filter(([_, value]) => value !== '' && value !== undefined)
+    )
+  };
+
+  console.log('Prepared Payload for Update:', cleanedPayload); // Log to verify payload
+
+  return this.http.put<Question>(`${this.apiUrl}/${_recordId}`, cleanedPayload).pipe(
+    catchError((error) => {
+      console.error('Error updating question:', error);
+      throw new Error('Failed to update question');
+    })
+  );
+}
 
   // PATCH (partial update) a question by _recordId
   patchQuestion(_recordId: string, question: Partial<Question>): Observable<Question> {

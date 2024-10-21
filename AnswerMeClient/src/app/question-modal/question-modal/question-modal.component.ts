@@ -20,18 +20,27 @@ export class QuestionModalComponent {
 constructor(private questionService: QuestionService) {
 
 }
-  addQuestion() {
-    this.selectedQuestion.createdAt = new Date();
-    this.selectedQuestion.updatedAt = new Date();
-    this.questionService.addQuestion(this.selectedQuestion).subscribe((newQuestion) => {
-        this.questions.push(newQuestion);
-        $('#questionModal').modal('hide');
-    });
+addQuestion() {
+  this.selectedQuestion.createdAt = new Date(); // Keep as Date object
+  this.selectedQuestion.updatedAt = new Date(); // Keep as Date object
+
+  this.questionService.addQuestion(this.selectedQuestion).subscribe(
+      (newQuestion) => {
+          this.questions.unshift(newQuestion);
+          $('#questionModal').modal('hide');
+      },
+      (error) => {
+          console.error('Error adding question:', error);
+      }
+  );
+}
+closeModal(){
+  $('#questionModal').modal('hide');
 }
 
 editQuestion() {
-  this.questionService.updateQuestion(this.selectedQuestion._recordId.toString(), this.selectedQuestion).subscribe(() => {
-      const index = this.questions.findIndex(q => q._recordId === this.selectedQuestion._recordId);
+  this.questionService.updateQuestion(this.selectedQuestion._recordId.toString(), this.selectedQuestion).subscribe((data) => { 
+    const index = this.questions.findIndex(q => q._recordId === this.selectedQuestion._recordId);
       if (index !== -1) {
           this.questions[index] = { ...this.selectedQuestion, updatedAt: new Date() };
       }

@@ -17,7 +17,7 @@ declare const $: any;
 })
 export class DashboardComponent implements OnInit {
   questions: Question[] = [];
-  selectedQuestion: Question = {} as Question;
+  selectedQuestion: any = {} as Question;
   isEditMode: boolean = false;
   searchTerm: string = ''; // To bind the search input
   currentPage: number = 1; 
@@ -33,6 +33,7 @@ getQuestions(){
     (data: Question[]) => {
         this.questions = data.map(q => ({
             ...q,
+            answer: q.answer ? q.answer.replace(/\s+/g, '') : q.answer,
             createdAt: new Date(q.createdAt),
             updatedAt: new Date(q.updatedAt)
         }));
@@ -97,5 +98,9 @@ filterQuestions() {
   generateId(): number {
     return Math.floor(Math.random() * 100000);
   }
-
+  removeWhiteSpace(field: any): void {
+    if (this.selectedQuestion  && this.selectedQuestion[field]) {
+        this.selectedQuestion[field] = this.selectedQuestion[field].replace(/\s+/g, '');
+    }
+  }
 }

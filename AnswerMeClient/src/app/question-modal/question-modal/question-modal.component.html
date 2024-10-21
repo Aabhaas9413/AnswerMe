@@ -2,23 +2,48 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="questionModalLabel">{{ isEditMode ? 'Edit Question' : 'Add Question' }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="questionModalLabel">{{ isEditMode ? 'Edit Question' : 'Add Question' }}</h5>                
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <label for="companyNameInput">Company Name</label>
+                    <input type="text" class="form-control" id="companyNameInput" [(ngModel)]="selectedQuestion.companyName" placeholder="Enter company name">
+                </div>
+                <div class="form-group">
+                    <label for="_companyIdInput">Company ID</label>
+                    <input type="number" class="form-control" id="_companyIdInput" [(ngModel)]="selectedQuestion._companyId" placeholder="Enter company ID">
+                </div>
+                <div class="form-group">
                     <label for="questionInput">Question</label>
-                    <input type="text" class="form-control" id="questionInput" [(ngModel)]="selectedQuestion.question" placeholder="Enter question here...">
+                    <textarea class="form-control" id="questionInput" [(ngModel)]="selectedQuestion.question" placeholder="Enter question here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="answerInput">Answer</label>
+                    <textarea class="form-control" id="answerInput" [(ngModel)]="selectedQuestion.answer" placeholder="Enter answer here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="createdByInput">Created By</label>
+                    <input type="email" class="form-control" id="createdByInput" [(ngModel)]="selectedQuestion.createdBy" placeholder="Enter creator email">
+                </div>
+                <div class="form-group">
+                    <label for="updatedByInput">Updated By</label>
+                    <input type="email" class="form-control" id="updatedByInput" [(ngModel)]="selectedQuestion.updatedBy" placeholder="Enter updater email">
                 </div>
                 <div class="form-group">
                     <label for="assignedToInput">Assigned To</label>
-                    <input type="email" class="form-control" id="assignedToInput" [(ngModel)]="selectedQuestion.assignedTo" placeholder="Enter email address">
+                    <input type="text" class="form-control" id="assignedToInput" [(ngModel)]="selectedQuestion.assignedTo" placeholder="Enter assigned person">
+                </div>
+                <div class="form-group">
+                    <label for="propertiesInput">Properties (Section)</label>
+                    <input type="text" class="form-control" id="propertiesInput" [(ngModel)]="selectedQuestion.properties" placeholder="Enter properties section">
+                </div>
+                <div class="form-group">
+                    <label for="questionDescriptionInput">Question Description</label>
+                    <textarea class="form-control" id="questionDescriptionInput" [(ngModel)]="selectedQuestion.questionDescription" placeholder="Enter question description..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" (click)="closeModal()" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" (click)="saveQuestion()">{{ isEditMode ? 'Update' : 'Add' }}</button>
             </div>
         </div>
