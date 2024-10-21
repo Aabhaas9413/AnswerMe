@@ -118,7 +118,4 @@ The application relies on the following environment variables:
 - **AIRTABLE_BASE_ID**: The ID of your Airtable base.
 
 
-## Contact
-For further information, issues, or feedback, please contact:
-- **Aabhaas Malhotra** - [email@example.com](mailto:email@example.com)
 
