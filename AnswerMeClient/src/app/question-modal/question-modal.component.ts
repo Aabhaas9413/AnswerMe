@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Question } from '../../models/questions.model';
-import { QuestionService } from '../../services/question.service';
+import { Question } from '../models/questions.model';
+import { QuestionService } from '../services/question.service';
 declare const $: any;
 
 @Component({

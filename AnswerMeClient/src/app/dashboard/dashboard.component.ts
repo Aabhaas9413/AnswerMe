@@ -4,7 +4,7 @@ import { Question } from '../models/questions.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnswerModalComponent } from "../answer-modal/answer-modal.component";
-import { QuestionModalComponent } from '../question-modal/question-modal/question-modal.component';
+import { QuestionModalComponent } from '../question-modal/question-modal.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 declare const $: any;
 
@@ -13,7 +13,7 @@ declare const $: any;
   standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  imports: [CommonModule, FormsModule, AnswerModalComponent, QuestionModalComponent, NgxPaginationModule]
+  imports: [CommonModule, FormsModule, AnswerModalComponent,QuestionModalComponent, NgxPaginationModule]
 })
 export class DashboardComponent implements OnInit {
   questions: Question[] = [];
@@ -47,10 +47,10 @@ getQuestions(){
 filterQuestions() {
   const term = this.searchTerm.toLowerCase();
   if (term) {
-      this.questions = this.questions.filter(q => 
-          q.question.toLowerCase().includes(term) || 
-          (q.answer && q.answer.toLowerCase().includes(term))
-      );
+    this.questions = this.questions.filter(q => 
+      q.assignedTo?.toLowerCase().includes(term) ||       
+      q.properties && q.properties.toString().includes(term)
+  );
   } else {
       this.getQuestions(); // Reset to original list
   }
