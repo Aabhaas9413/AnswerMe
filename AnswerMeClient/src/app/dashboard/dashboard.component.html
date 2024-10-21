@@ -1,8 +1,7 @@
 <nav class="navbar navbar-expand-lg colorful-navbar">
     <a class="navbar-brand text-white" href="#">Audit Dashboard</a>
     <div class="ml-auto">
-        <button class="btn btn-outline-light" (click)="openQuestionModal()">+ Add Question</button>
-        <button class="btn btn-outline-light ml-2">Archive</button>
+        <button class="btn btn-outline-light" (click)="openQuestionModal()">+ Add Question</button>        
     </div>
 </nav>
 
@@ -13,8 +12,6 @@
             <div class="input-group search-bar">
                 <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="filterQuestions()" aria-label="Search">
             </div>
-            <button class="btn btn-primary filter-button">Owners (2)</button>
-            <button class="btn btn-success filter-button">Status (4)</button>
         </div>
     </div>
 
