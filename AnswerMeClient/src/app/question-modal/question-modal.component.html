@@ -29,10 +29,23 @@
                     <label for="updatedByInput">Updated By</label>
                     <input type="email" class="form-control" id="updatedByInput" [(ngModel)]="selectedQuestion.updatedBy" placeholder="Enter updater email">
                 </div>
-                <div class="form-group">
-                    <label for="assignedToInput">Assigned To</label>
-                    <input type="text" class="form-control" id="assignedToInput" [(ngModel)]="selectedQuestion.assignedTo" placeholder="Enter assigned person">
+                <div class="form-group" *ngIf="!isEditMode">
+                    <label for="assignedToInput">Assigned To (Emails)</label>
+                    <div *ngFor="let email of assignedEmails; let i = index;  trackBy: trackByFn" class="input-group mb-1">
+                        <input type="email" class="form-control" [(ngModel)]="assignedEmails[i]" placeholder="Enter email address" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" type="button" (click)="removeEmail(i)">Remove</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="button" (click)="addEmail()">Add Email</button>
                 </div>
+                
+                <!-- For Edit Mode, show a single input field -->
+                <div class="form-group" *ngIf="isEditMode">
+                    <label for="assignedToEdit">Assigned To</label>
+                    <input type="email" class="form-control" [(ngModel)]="selectedQuestion.assignedTo" placeholder="Enter email address" required>
+                </div>
+                              
                 <div class="form-group">
                     <label for="propertiesInput">Properties (Section)</label>
                     <input type="text" class="form-control" id="propertiesInput" [(ngModel)]="selectedQuestion.properties" placeholder="Enter properties section">

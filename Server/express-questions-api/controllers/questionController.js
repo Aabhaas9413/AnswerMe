@@ -66,34 +66,59 @@ exports.getQuestions = async (req, res) => {
     );
 };
 
-// POST a new question
+// POST a new question with bulk assignment handling
 exports.addQuestion = async (req, res) => {
     console.log('Incoming request body:', req.body);
     try {
         const fields = mapFieldsToAirtable(req.body.fields);
-        const createdRecords = await base('tbloyD5mIaPRlgh4F').create([{ fields }]);
-        const createdRecord = createdRecords[0];
-        console.log('Created Airtable record:', createdRecord);
-        res.status(201).json(convertRecordToQuestion(createdRecord));
+
+        // Check if "Assigned To" has values
+        const assignedToUsers = fields["Assigned To"] ? fields["Assigned To"].split(',').map(user => user.trim()) : [];
+
+        const createdRecords = [];
+        if (assignedToUsers.length === 0) {
+            // If no assigned users, just create one record without assigning
+            const records = await base('tbloyD5mIaPRlgh4F').create([{ fields }]);
+            createdRecords.push(...records);
+        } else {
+            // Create a record for each assigned user
+            for (let user of assignedToUsers) {
+                const newFields = { ...fields, "Assigned To": user };
+                const records = await base('tbloyD5mIaPRlgh4F').create([{ fields: newFields }]);
+                createdRecords.push(...records);
+            }
+        }
+
+        const response = createdRecords.map(convertRecordToQuestion);
+        console.log('Created Airtable records:', response);
+        res.status(201).json(response); // Return all created records
     } catch (err) {
         console.error('Error adding question:', err);
         res.status(400).json({ error: 'Failed to add question', details: err.message });
     }
 };
 
-// PUT update a question
+// PUT update a question with bulk assignment handling
 exports.updateQuestion = async (req, res) => {
     try {
         console.log('Incoming Request Payload:', req.body);
         const fields = cleanFields(mapFieldsToAirtable(req.body.fields));
-        console.log('Attempting to update record with ID:', req.params.id);
-        console.log('Fields to update:', fields);
-        const updatedRecords = await base('tbloyD5mIaPRlgh4F').update([
-            { id: req.params.id, fields }
-        ]);
-        const updatedRecord = updatedRecords[0];
-        console.log('Updated Airtable record:', updatedRecord);
-        res.json(convertRecordToQuestion(updatedRecord));
+
+        // If updating the `Assigned To` field, handle multiple users
+        const assignedToUsers = fields["Assigned To"].split(',').map(user => user.trim());
+
+        const updatedRecords = [];
+        for (let user of assignedToUsers) {
+            const newFields = { ...fields, "Assigned To": user };
+            const records = await base('tbloyD5mIaPRlgh4F').update([
+                { id: req.params.id, fields: newFields }
+            ]);
+            updatedRecords.push(...records);
+        }
+
+        const response = updatedRecords.map(convertRecordToQuestion);
+        console.log('Updated Airtable records:', response);
+        res.json(response); // Return all updated records
     } catch (err) {
         console.error('Error updating question:', err);
         res.status(400).json({ error: 'Failed to update question', details: err.message });
