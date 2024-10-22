@@ -16,7 +16,7 @@
             <!-- New Dropdown for Filtering Assigned To -->
             <div class="input-group ml-3">
                 <select class="form-control" [(ngModel)]="selectedAssignedTo" (change)="filterByAssignedTo()">
-                    <option value="">All Assigned Users</option>
+                    <option value="">No User Filtered</option>
                     <option *ngFor="let user of uniqueAssignedUsers" [value]="user">{{ user }}</option>
                 </select>
             </div>
