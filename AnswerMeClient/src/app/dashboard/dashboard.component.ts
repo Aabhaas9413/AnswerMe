@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AnswerModalComponent } from "../answer-modal/answer-modal.component";
 import { QuestionModalComponent } from '../question-modal/question-modal.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import Fuse from 'fuse.js';
 declare const $: any;
 
 @Component({
@@ -21,13 +22,25 @@ export class DashboardComponent implements OnInit {
   isEditMode: boolean = false;
   searchTerm: string = ''; // To bind the search input
   currentPage: number = 1; 
+  fuse: Fuse<Question> = new Fuse([]); 
+  allQuestions: Question[] = []; 
+  uniqueAssignedUsers: string[] = []; 
+  selectedAssignedTo: string = '';
   constructor(private questionService: QuestionService) { }
   
 
   ngOnInit(): void {
    this.getQuestions()
 }
+initializeFuse() {
+  const options = {
+    keys: ['question', 'answer'], 
+    includeScore: true,           
+    threshold: 0.2,               
+  };
 
+  this.fuse = new Fuse(this.questions, options);
+}
 getQuestions(){
   this.questionService.getQuestions().subscribe(
     (data: Question[]) => {
@@ -37,6 +50,9 @@ getQuestions(){
             createdAt: new Date(q.createdAt),
             updatedAt: new Date(q.updatedAt)
         }));
+        this.allQuestions = [...this.questions]; 
+        this.extractUniqueAssignedUsers();
+        this.initializeFuse();
     },
     (error) => {
         console.error('Error loading questions:', error.message);
@@ -44,15 +60,39 @@ getQuestions(){
 ); 
 }
 
-filterQuestions() {
-  const term = this.searchTerm.toLowerCase();
-  if (term) {
-    this.questions = this.questions.filter(q => 
-      q.assignedTo?.toLowerCase().includes(term) ||       
-      q.properties && q.properties.toString().includes(term)
-  );
+extractUniqueAssignedUsers() {
+  const usersSet = new Set<string>();
+  this.allQuestions.forEach(question => {
+    if (question.assignedTo) {
+      const assignedUsers = question.assignedTo.split(',').map(user => user.trim());
+      assignedUsers.forEach(user => usersSet.add(user));
+    }
+  });
+  this.uniqueAssignedUsers = Array.from(usersSet);
+}
+
+filterByAssignedTo() {
+  if (this.selectedAssignedTo) {
+    this.questions = this.allQuestions.filter(q => q.assignedTo?.includes(this.selectedAssignedTo));
   } else {
-      this.getQuestions(); // Reset to original list
+    this.questions = [...this.allQuestions];
+  }
+}
+
+filterQuestions() {
+  if (this.searchTerm.trim() === '' && !this.selectedAssignedTo) {
+    this.questions = [...this.allQuestions]; 
+    return;
+  }
+
+  const searchResults = this.fuse.search(this.searchTerm);
+  const filteredResults = searchResults.map(result => result.item);
+  if (this.selectedAssignedTo) {
+    filteredResults.length !== 0 ?
+    this.questions = filteredResults.filter(q => q.assignedTo?.includes(this.selectedAssignedTo)):
+    this.questions = this.questions.filter(q => q.assignedTo?.includes(this.selectedAssignedTo));
+  } else {
+    this.questions = filteredResults;
   }
 }
   openModal(question: Question) {

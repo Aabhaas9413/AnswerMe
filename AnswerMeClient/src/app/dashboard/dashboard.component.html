@@ -12,6 +12,14 @@
             <div class="input-group search-bar">
                 <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="filterQuestions()" aria-label="Search">
             </div>
+    
+            <!-- New Dropdown for Filtering Assigned To -->
+            <div class="input-group ml-3">
+                <select class="form-control" [(ngModel)]="selectedAssignedTo" (change)="filterByAssignedTo()">
+                    <option value="">All Assigned Users</option>
+                    <option *ngFor="let user of uniqueAssignedUsers" [value]="user">{{ user }}</option>
+                </select>
+            </div>
         </div>
     </div>
 
